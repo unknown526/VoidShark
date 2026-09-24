@@ -1,0 +1,22 @@
+{
+  "name": "void-browser",
+  "version": "1.0.0",
+  "description": "Void — a self-hosted web proxy/browser shell with tabs, shortcuts, a caching layer, and a Void AI sidebar (Groq-backed).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "compression": "^1.7.4",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ipaddr.js": "^2.2.0",
+    "tough-cookie": "^4.1.4",
+    "undici": "^6.19.8",
+    "ws": "^8.18.0"
+  }
+}

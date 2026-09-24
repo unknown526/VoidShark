@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Void</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <div class="tab-bar" id="tab-bar">
+      <div class="tabs" id="tabs-container"></div>
+      <button id="new-tab-btn" class="new-tab-btn" title="New tab" aria-label="New tab">+</button>
+    </div>
+
+    <header class="toolbar">
+      <div class="nav-group">
+        <button id="back-btn" class="icon-btn" title="Back" aria-label="Back" disabled>
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="forward-btn" class="icon-btn" title="Forward" aria-label="Forward" disabled>
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="reload-btn" class="icon-btn" title="Reload" aria-label="Reload">
+          <svg viewBox="0 0 24 24" width="17" height="17"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="home-btn" class="icon-btn" title="Home" aria-label="Home">
+          <svg viewBox="0 0 24 24" width="17" height="17"><path d="M3 11l9-8 9 8M5 10v10h14V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <form id="url-form" class="url-bar" autocomplete="off">
+        <span class="lock-icon" id="lock-icon">🔒</span>
+        <input
+          id="url-input"
+          type="text"
+          placeholder="Search Void or type a URL"
+          spellcheck="false"
+          autocapitalize="off"
+        />
+        <button type="submit" id="go-btn" class="go-btn">Go</button>
+      </form>
+
+      <div class="toolbar-right">
+        <button id="console-toggle" class="icon-btn" title="Toggle console" aria-label="Toggle console">
+          🖥️<span id="console-error-badge" class="console-error-badge hidden">0</span>
+        </button>
+        <button id="history-toggle" class="icon-btn" title="History (Alt+H)" aria-label="History">🕘</button>
+        <button id="music-toggle" class="icon-btn" title="Music" aria-label="Music">🎵</button>
+        <button id="voidtube-toggle" class="icon-btn" title="VoidTube" aria-label="VoidTube">📺</button>
+        <button id="ai-toggle" class="ai-toggle-btn" title="Void AI" aria-label="Void AI">
+          <span class="ai-star">✦</span> Void AI
+        </button>
+      </div>
+    </header>
+
+    <div class="loading-bar-track">
+      <div id="loading-bar" class="loading-bar"></div>
+    </div>
+
+    <main class="viewport" id="viewport"></main>
+
+    <div id="console-panel" class="console-panel hidden">
+      <div class="console-header">
+        <span>Console</span>
+        <div class="console-actions">
+          <button id="console-copy-btn" class="console-btn">Copy</button>
+          <button id="console-clear-btn" class="console-btn">Clear</button>
+          <button id="console-close-btn" class="console-btn">✕</button>
+        </div>
+      </div>
+      <div class="console-toolbar">
+        <div id="console-filters" class="console-filters">
+          <button type="button" class="console-filter-btn active" data-filter="all">All</button>
+          <button type="button" class="console-filter-btn" data-filter="error">Errors</button>
+          <button type="button" class="console-filter-btn" data-filter="network">Network</button>
+          <button type="button" class="console-filter-btn" data-filter="ai">Void AI</button>
+          <button type="button" class="console-filter-btn" data-filter="info">Info</button>
+          <button type="button" class="console-filter-btn" data-filter="success">Success</button>
+        </div>
+        <input id="console-search" class="console-search" type="text" placeholder="Filter console…" spellcheck="false" />
+      </div>
+      <div id="console-log" class="console-log"></div>
+    </div>
+
+    <aside id="ai-panel" class="ai-panel hidden">
+      <div class="ai-header">
+        <span class="ai-star">✦</span>
+        <span>Void AI</span>
+        <button id="ai-close-btn" class="ai-close-btn" aria-label="Close Void AI">✕</button>
+      </div>
+      <div id="ai-messages" class="ai-messages">
+        <div class="ai-greeting">
+          <div class="ai-greeting-title">Hello. How can I help you today?</div>
+          <div class="ai-chips">
+            <button class="ai-chip" data-prompt="What can you do?">What can you do?</button>
+            <button class="ai-chip" data-prompt="What kinds of questions can I ask?">What kinds of questions can I ask?</button>
+            <button class="ai-chip" data-prompt="Help me think through a problem">Help me think through a problem</button>
+          </div>
+        </div>
+      </div>
+      <div id="ai-context-row" class="ai-context-row hidden"></div>
+      <form id="ai-form" class="ai-input-row" autocomplete="off">
+        <div class="ai-context-picker">
+          <button type="button" id="ai-context-btn" class="ai-context-btn" title="Add tabs as context" aria-label="Add tabs as context">+</button>
+          <div id="ai-context-popover" class="ai-context-popover hidden">
+            <div class="ai-context-popover-title">Include tabs as context</div>
+            <div id="ai-context-list" class="ai-context-list"></div>
+          </div>
+        </div>
+        <input id="ai-input" type="text" placeholder="Type / to use skills" spellcheck="false" />
+        <button type="submit" id="ai-send-btn" class="ai-send-btn" aria-label="Send">➤</button>
+      </form>
+    </aside>
+
+    <aside id="music-panel" class="music-panel hidden">
+      <div class="music-header">
+        <span class="music-logo">🎵</span>
+        <span>Music</span>
+        <button id="music-close-btn" class="ai-close-btn" aria-label="Close Music">✕</button>
+      </div>
+
+      <form id="music-search-form" class="music-search-row" autocomplete="off">
+        <input id="music-search-input" type="text" placeholder="Search songs or artists" spellcheck="false" />
+        <button type="submit" class="music-search-btn" aria-label="Search">🔍</button>
+      </form>
+
+      <div class="music-tabs">
+        <button class="music-tab-btn active" data-tab="search" type="button">Search</button>
+        <button class="music-tab-btn" data-tab="library" type="button">Library</button>
+        <button class="music-tab-btn" data-tab="playlists" type="button">Playlists</button>
+      </div>
+
+      <div id="music-body" class="music-body">
+        <div id="music-view-search" class="music-view">
+          <div id="music-search-empty" class="music-empty">Search for a song or artist to start listening.</div>
+          <div id="music-search-results" class="music-list"></div>
+        </div>
+        <div id="music-view-library" class="music-view hidden">
+          <div id="music-library-empty" class="music-empty">Songs you like will show up here.</div>
+          <div id="music-library-list" class="music-list"></div>
+        </div>
+        <div id="music-view-playlists" class="music-view hidden">
+          <div class="music-playlist-toolbar">
+            <input id="music-new-playlist-input" type="text" placeholder="New playlist name" />
+            <button id="music-new-playlist-btn" class="music-search-btn" aria-label="Create playlist">＋</button>
+          </div>
+          <div id="music-playlists-list" class="music-list"></div>
+        </div>
+      </div>
+
+      <div id="music-now-playing" class="music-now-playing hidden">
+        <img id="music-now-art" class="music-now-art" alt="" />
+        <div class="music-now-info">
+          <div class="music-now-titles">
+            <div id="music-now-title" class="music-now-title"></div>
+            <div id="music-now-channel" class="music-now-channel"></div>
+          </div>
+          <div class="music-now-progress">
+            <span id="music-now-time" class="music-now-time">0:00</span>
+            <input id="music-now-seek" type="range" min="0" max="1000" value="0" class="music-seek" />
+            <span id="music-now-duration" class="music-now-time">0:00</span>
+          </div>
+        </div>
+        <div class="music-now-controls">
+          <button id="music-prev-btn" class="music-ctrl-btn" title="Previous" aria-label="Previous">⏮</button>
+          <button id="music-playpause-btn" class="music-ctrl-btn music-play-btn" title="Play/Pause" aria-label="Play/Pause">▶</button>
+          <button id="music-next-btn" class="music-ctrl-btn" title="Next" aria-label="Next">⏭</button>
+          <button id="music-like-btn" class="music-ctrl-btn" title="Add to Library" aria-label="Add to Library">♡</button>
+        </div>
+      </div>
+
+      <div id="music-yt-host" class="music-yt-host"></div>
+    </aside>
+
+    <aside id="customize-panel" class="customize-panel hidden">
+      <div class="customize-header">
+        <button id="customize-back-btn" class="customize-back-btn hidden" aria-label="Back">←</button>
+        <span id="customize-title">Customize Void</span>
+        <button id="customize-close-btn" class="ai-close-btn" aria-label="Close">✕</button>
+      </div>
+
+      <div id="customize-view-main" class="customize-view">
+        <div class="customize-section-label">Appearance</div>
+        <div class="customize-mode-row">
+          <button class="customize-mode-btn" data-mode="light" type="button">☀️ Light</button>
+          <button class="customize-mode-btn" data-mode="dark" type="button">🌙 Dark</button>
+          <button class="customize-mode-btn" data-mode="device" type="button">💻 Device</button>
+        </div>
+
+        <div class="customize-section-label">Accent color</div>
+        <div id="customize-accent-grid" class="customize-swatch-grid"></div>
+
+        <div class="customize-section-label">Background</div>
+        <button id="customize-open-bg-btn" class="customize-wide-btn" type="button">🖼️ Change background</button>
+      </div>
+
+      <div id="customize-view-bg" class="customize-view hidden">
+        <div class="customize-bg-grid">
+          <div class="customize-bg-tile customize-bg-upload" id="customize-upload-tile">
+            <div class="customize-bg-upload-icon">⬆️</div>
+            <div>Upload an image</div>
+          </div>
+          <div class="customize-bg-tile customize-bg-none" id="customize-bg-none-tile">
+            <div>Default</div>
+          </div>
+        </div>
+        <div class="customize-section-label">Solid colors</div>
+        <div id="customize-solid-grid" class="customize-swatch-grid"></div>
+        <div class="customize-section-label">Presets</div>
+        <div id="customize-preset-grid" class="customize-bg-grid"></div>
+        <input type="file" id="customize-upload-input" accept="image/*" class="customize-hidden-input" />
+      </div>
+    </aside>
+
+    <aside id="history-panel" class="history-panel hidden">
+      <div class="history-header">
+        <span>History</span>
+        <button id="history-clear-btn" class="history-clear-btn" title="Clear browsing history">Clear</button>
+        <button id="history-close-btn" class="ai-close-btn" aria-label="Close History">✕</button>
+      </div>
+      <div class="history-search-row">
+        <input id="history-search-input" type="text" placeholder="Search history" spellcheck="false" />
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </aside>
+
+  </div>
+
+  <div id="shortcut-modal" class="modal hidden">
+    <div class="modal-box">
+      <h2>Add shortcut</h2>
+      <label>Name<input id="shortcut-name-input" type="text" placeholder="e.g. GitHub" /></label>
+      <label>URL<input id="shortcut-url-input" type="text" placeholder="e.g. github.com" /></label>
+      <div class="modal-actions">
+        <button id="shortcut-cancel-btn" class="modal-btn secondary">Cancel</button>
+        <button id="shortcut-save-btn" class="modal-btn primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="script.js"></script>
+</body>
+</html>

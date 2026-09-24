@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: void-browser
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      # Set these in the Render dashboard (Environment tab) instead of
+      # committing real values here — see .env.example for the full list.
+      - key: YOUTUBE_API_KEY
+        sync: false
+      - key: VOID_AI_KEY
+        sync: false
+      - key: GOOGLE_SEARCH_API_KEY
+        sync: false
+      - key: GOOGLE_SEARCH_CX
+        sync: false
